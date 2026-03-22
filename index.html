@@ -6,28 +6,33 @@
     <title>Jufan Huang | AI Solution Designer</title>
     <style>
         :root {
-            /* 調整後的專業深灰配色方案 */
-            --bg-dark: #1a1a1a;        /* 極深灰背景 */
-            --card-gray: #2d2d2d;      /* 卡片深灰色 */
-            --coral: #FF784F;          /* 主強調色 */
-            --clay: #DB9D47;           /* 副強調色 */
-            --mint: #EDFFD9;           /* 內容文字色 */
+            /* 根據附圖精確定義色碼 */
+            --color-1: #5B8DB8; /* 藍灰 */
+            --color-2: #E8DDD0; /* 米色 */
+            --color-3: #2D7D7A; /* 深青 (主色) */
+            --color-4: #B8C4CC; /* 淡灰藍 */
+            --color-5: #C8943A; /* 金褐 (副色) */
+            --color-6: #9B84B8; /* 紫色 */
+            
+            --bg-dark: #121212;
+            --card-bg: #1e1e1e;
             --text-white: #ffffff;
         }
 
         body {
             background-color: var(--bg-dark);
             color: var(--text-white);
-            font-family: "PingFang TC", sans-serif;
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
             margin: 0; padding: 40px 20px;
             display: flex; flex-direction: column; align-items: center;
             scroll-behavior: smooth;
         }
 
         .header { text-align: center; margin-bottom: 50px; }
-        .highlight { color: var(--coral); }
+        .header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        .highlight { color: var(--color-3); } /* 使用深青色作為主高亮 */
 
-        /* Bento Grid 佈局 */
+        /* --- Bento Grid 佈局 --- */
         .bento-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -37,55 +42,99 @@
         }
 
         .card {
-            background: var(--card-gray);
+            background: var(--card-bg);
             border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 16px; padding: 24px;
-            transition: all 0.3s ease;
+            border-radius: 20px; padding: 24px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer; display: flex; flex-direction: column; justify-content: center;
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            border-color: var(--coral);
-            background: #363636;
+            transform: translateY(-8px);
+            border-color: var(--color-3); /* Hover 時變深青色 */
+            background: #252525;
+            box-shadow: 0 10px 30px rgba(45, 125, 122, 0.2);
         }
 
         .card.featured {
             grid-column: span 2; grid-row: span 2;
-            background: linear-gradient(145deg, #2d2d2d, #1a1a1a);
-            border-bottom: 4px solid var(--coral);
+            background: linear-gradient(145deg, #252525, #1e1e1e);
+            border-bottom: 5px solid var(--color-3);
         }
 
-        .card h3 { margin: 0 0 10px 0; color: var(--clay); font-size: 1.1rem; }
-        .card.featured h3 { font-size: 1.8rem; color: var(--coral); }
-        .card p { color: var(--mint); opacity: 0.8; font-size: 0.9rem; margin: 0; }
+        .card h3 { margin: 0 0 10px 0; color: var(--color-5); font-size: 1.1rem; } /* 使用金褐色 */
+        .card.featured h3 { font-size: 1.8rem; color: var(--color-3); }
+        .card p { color: var(--color-4); opacity: 0.9; font-size: 0.95rem; margin: 0; }
 
-        /* 詳情面板 */
+        /* --- 詳情面板 --- */
         #detail-panel {
-            margin-top: 30px; width: 100%; max-width: 1000px;
-            display: none; animation: slideUp 0.4s ease-out;
+            margin-top: 40px; width: 100%; max-width: 1000px;
+            display: none; animation: slideUp 0.5s ease-out;
         }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
+            from { opacity: 0; transform: translateY(40px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .detail-box {
             background: #ffffff; color: #333;
-            border-radius: 20px; padding: 40px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border-radius: 24px; padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
         }
 
-        /* Chatbot 模擬樣式 */
-        .chat-ui { border: 1px solid #eee; border-radius: 15px; padding: 20px; max-width: 400px; margin: 0 auto; }
-        .msg { margin-bottom: 15px; display: flex; }
-        .msg.bot .bubble { background: #f0f0f0; border-radius: 15px 15px 15px 2px; }
-        .msg.user .bubble { background: var(--coral); color: white; margin-left: auto; border-radius: 15px 15px 2px 15px; }
-        .bubble { padding: 10px 15px; font-size: 14px; max-width: 85%; }
+        /* --- Chatbot 互動 UI --- */
+        .chat-ui { 
+            border: 1px solid #eee; border-radius: 20px; 
+            background: #fdfdfd;
+            display: flex; flex-direction: column;
+            height: 550px; max-width: 500px; margin: 0 auto;
+            overflow: hidden;
+        }
+
+        #chat-flow {
+            flex: 1; overflow-y: auto; padding: 25px;
+            display: flex; flex-direction: column; gap: 15px;
+            scroll-behavior: smooth;
+        }
+
+        .msg { max-width: 85%; padding: 12px 18px; font-size: 14.5px; line-height: 1.6; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .msg.bot { 
+            align-self: flex-start; 
+            background: var(--color-2); /* 米色背景 */
+            color: #4a4a4a; 
+            border-radius: 18px 18px 18px 4px; 
+        }
+
+        .msg.user { 
+            align-self: flex-end; 
+            background: var(--color-1); /* 藍灰色背景 */
+            color: white; 
+            border-radius: 18px 18px 4px 18px; 
+        }
+
+        /* 強調文字樣式 */
+        .h-gold { color: var(--color-5); font-weight: bold; }
+        .h-teal { color: var(--color-3); font-weight: bold; }
+        .h-purple { color: var(--color-6); font-weight: bold; }
+
+        .opt-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; align-self: flex-start; }
         .opt-btn { 
-            display: inline-block; padding: 8px 16px; border: 1px solid var(--coral); 
-            color: var(--coral); border-radius: 20px; margin-top: 8px; cursor: pointer;
+            padding: 10px 20px; border: 1.5px solid var(--color-3); 
+            color: var(--color-3); border-radius: 25px; 
+            cursor: pointer; font-size: 13.5px; background: white; transition: 0.3s;
+            font-weight: 500;
+        }
+        .opt-btn:hover { background: var(--color-3); color: white; }
+
+        .chat-input-wrap { display: flex; padding: 20px; border-top: 1px solid #f0f0f0; background: white; gap: 12px; }
+        .chat-input-wrap input { flex: 1; padding: 12px 20px; border: 1px solid #e0e0e0; border-radius: 30px; outline: none; transition: 0.3s; }
+        .chat-input-wrap input:focus { border-color: var(--color-3); }
+        .chat-send-btn { 
+            background: var(--color-3); color: white; border: none; 
+            padding: 0 25px; border-radius: 30px; cursor: pointer; font-weight: bold;
         }
     </style>
 </head>
@@ -93,19 +142,19 @@
 
     <div class="header">
         <h1>黃如璠 <span class="highlight">Jufan Huang</span></h1>
-        <p style="color:var(--clay)">AI Solution Designer × Marketing Strategist</p>
+        <p style="color:var(--color-5); font-weight: 500; letter-spacing: 1px;">AI Solution Designer × Marketing Strategist</p>
     </div>
 
     <div class="bento-grid">
         <div class="card featured" onclick="show('chat')">
             <h3>AI 產品願景與藍圖規劃 🎯</h3>
-            <p>點擊體驗：從 0 到 1 的「家用淨水器 Agent」對話邏輯展示。</p>
+            <p>點擊體驗：從 0 到 1 的「家用淨水器 Agent」互動對話實測，展現邏輯與體驗設計能力。</p>
         </div>
-        <div class="card" onclick="show('ux')"><h3>用戶體驗架構 🧠</h3><p>直覺、流暢的對話設計。</p></div>
-        <div class="card" onclick="show('biz')"><h3>商業需求洞察 📈</h3><p>精準拆解痛點，轉化提案。</p></div>
-        <div class="card" onclick="show('data')"><h3>數據驅動優化 📊</h3><p>持續迭代，提升產品效能。</p></div>
-        <div class="card" onclick="show('growth')"><h3>整合行銷增長 📈</h3><p>驅動品牌持續影響力。</p></div>
-        <div class="card" onclick="show('e2e')"><h3>端對端專案推進 🚀</h3><p>確保專案完美落地執行。</p></div>
+        <div class="card" onclick="show('ux')"><h3>用戶體驗架構 🧠</h3><p>設計直覺、流暢的對話路徑與容錯機制。</p></div>
+        <div class="card" onclick="show('biz')"><h3>商業需求洞察 📈</h3><p>精準拆解痛點，將業務需求轉化為 AI 解決方案。</p></div>
+        <div class="card" onclick="show('data')"><h3>數據驅動優化 📊</h3><p>分析對話日誌，透過數據迭代提升轉化效能。</p></div>
+        <div class="card" onclick="show('growth')"><h3>整合行銷增長 🚀</h3><p>結合 Chatbot 與社群能量，驅動自動化行銷閉環。</p></div>
+        <div class="card" onclick="show('e2e')"><h3>端對端專案推進 🛠️</h3><p>橋接開發、設計與業務端，確保專案完美落地。</p></div>
     </div>
 
     <div id="detail-panel">
@@ -113,29 +162,125 @@
     </div>
 
     <script>
+        let userName = "";
+        let chatStep = 0;
+
         const info = {
             chat: `
-                <h2 style="color:var(--coral);text-align:center">Agent 對話實測展示</h2>
+                <h2 style="color:var(--color-3); text-align:center; margin-bottom:25px;">Agent 互動對話原型</h2>
                 <div class="chat-ui">
-                    <div class="msg bot"><div class="bubble">嗨～我是智能助理，有任何問題都能問我喔！</div></div>
-                    <div class="msg user"><div class="bubble">我家是安裝你們的家用淨水器，想請問濾芯多久要換一次？</div></div>
-                    <div class="msg bot"><div class="bubble">您好！建議每 6 個月更換一次以確保過濾效果喔！💧<br><br>您使用的是【極淨系列 A1】嗎？現在濾芯 3 入組有首購優惠 $450，要幫您確認庫存嗎？</div></div>
-                    <div class="opt-btn" onclick="alert('已為您跳轉結帳頁面！')">我要購買</div>
-                    <div class="opt-btn" onclick="alert('沒問題，若有需要隨時找我！')">這次不用</div>
+                    <div id="chat-flow"></div>
+                    <div class="chat-input-wrap">
+                        <input type="text" id="chat-input" placeholder="請輸入稱呼開始互動..." onkeypress="if(event.key==='Enter') handleChat()">
+                        <button class="chat-send-btn" onclick="handleChat()">發送</button>
+                    </div>
                 </div>
             `,
-            ux: `<h2>用戶體驗架構 🧠</h2><ul><li><b>Persona 設定：</b> 建立具備品牌溫度的對話語氣。</li><li><b>Fallback 機制：</b> 確保 AI 無法回答時能優雅引導至真人或知識庫。</li></ul>`,
-            biz: `<h2>商業需求洞察 📈</h2><ul><li><b>需求轉化：</b> 將模糊的業務痛點拆解為具體 AI 功能需求。</li><li><b>效益評估：</b> 預估導入後可降低的營運成本與提升的轉化率。</li></ul>`,
-            data: `<h2>數據驅動優化 📊</h2><ul><li><b>日誌分析：</b> 定期檢視對話 Log，找出用戶流失的關鍵節點。</li><li><b>漏斗優化：</b> 針對完成率較低的流程進行 A/B Testing。</li></ul>`,
-            growth: `<h2>整合行銷增長 📈</h2><ul><li><b>流量閉環：</b> 串聯廣告、社群與 Chatbot，達成自動化行銷。</li><li><b>口碑操作：</b> 運用 KOL 合作與內容行銷帶動品牌聲量。</li></ul>`,
-            e2e: `<h2>端對端專案推進 🚀</h2><ul><li><b>跨維度溝通：</b> 橋接工程開發、UI/UX 設計與業務端目標。</li><li><b>全生命週期管理：</b> 從需求、提案、開發到上線後的運營與維護。</li></ul>`
+            ux: `<h2 style="color:var(--color-3)">用戶體驗架構 🧠</h2><ul><li><b>Persona 設定：</b> 打造具備品牌溫度的對話語氣，建立信任。</li><li><b>容錯與引導：</b> 當 AI 無法識別意圖時，提供優雅的 Fallback 與按鈕引導。</li></ul>`,
+            biz: `<h2 style="color:var(--color-3)">商業需求洞察 📈</h2><ul><li><b>痛點拆解：</b> 將模糊的營運難題轉化為清晰的技術規格。</li><li><b>轉化評估：</b> 預估對話機器人對業務轉化率的實質貢獻。</li></ul>`,
+            data: `<h2 style="color:var(--color-3)">數據驅動優化 📊</h2><ul><li><b>日誌漏斗：</b> 找出對話過程中的「跳出點」，精準優化腳本。</li><li><b>A/B Testing：</b> 測試不同導購語句對點擊率的影響。</li></ul>`,
+            growth: `<h2 style="color:var(--color-3)">整合行銷增長 🚀</h2><ul><li><b>自動化閉環：</b> 串聯廣告點擊到對話導購，降低開發客戶成本。</li><li><b>品牌影響力：</b> 結合內容行銷與自動化回覆，提升客戶黏著度。</li></ul>`,
+            e2e: `<h2 style="color:var(--color-3)">端對端專案推進 🛠️</h2><ul><li><b>跨領域翻譯官：</b> 確保工程師、設計師與老闆在同一個頻率上。</li><li><b>生命週期管理：</b> 從需求、開發到上線後的長效維運計畫。</li></ul>`
         };
 
         function show(key) {
             const panel = document.getElementById('detail-panel');
-            document.getElementById('inner').innerHTML = info[key];
+            const inner = document.getElementById('inner');
+            inner.innerHTML = info[key];
             panel.style.display = 'block';
-            setTimeout(() => { panel.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
+
+            if (key === 'chat') { resetChat(); }
+            
+            setTimeout(() => { 
+                panel.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+            }, 100);
+        }
+
+        function resetChat() {
+            chatStep = 0;
+            const flow = document.getElementById('chat-flow');
+            flow.innerHTML = "";
+            setTimeout(() => {
+                appendMsg("bot", "您好！我是您的智慧助手。在開始前，請問該如何稱呼您呢？");
+            }, 300);
+        }
+
+        function handleChat() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            appendMsg("user", text);
+            input.value = "";
+            processBotResponse(text);
+        }
+
+        function processBotResponse(inputText) {
+            setTimeout(() => {
+                if (chatStep === 0) {
+                    userName = inputText;
+                    appendMsg("bot", `好的，<span class="h-teal">${userName}</span>！很高興為您服務。`);
+                    
+                    setTimeout(() => {
+                        appendMsg("bot", "嗨～我是智能助理，有任何問題都能點選下方按鈕問我喔！");
+                        appendOptions([
+                            { t: "濾芯更換週期", a: () => startFilterFlow() }
+                        ]);
+                    }, 800);
+                    chatStep = 1;
+                }
+            }, 600);
+        }
+
+        function startFilterFlow() {
+            appendMsg("user", "濾芯更換週期");
+            setTimeout(() => {
+                appendMsg("bot", `您好！家用型濾芯建議每 <span class="h-gold">6 個月</span> 更換一次，才能確保過濾效果喔！💧`);
+                setTimeout(() => {
+                    appendMsg("bot", `您目前使用的是【極淨系列 A1】嗎？現在「長效濾芯 3 入組」有首購優惠，平均一顆只要 <span class="h-gold">$450</span>，要幫您確認庫存嗎？`);
+                    appendOptions([
+                        { t: "好啊，請幫我確認。", a: () => handleAction("confirm") },
+                        { t: "不用了，謝謝。", a: () => handleAction("cancel") }
+                    ]);
+                }, 1000);
+            }, 600);
+        }
+
+        function handleAction(type) {
+            if (type === 'confirm') {
+                appendMsg("user", "好啊，請幫我確認。");
+                setTimeout(() => {
+                    appendMsg("bot", `沒問題，庫存充足！${userName}，建議您現在加入<span class="h-purple">「水質守護會員」</span>，這一單立刻現折 <span class="h-gold">$100 元</span> 喔！🎁`);
+                    appendOptions([{ t: "我要加入", a: () => alert("已為您啟動水質守護計畫！") }]);
+                }, 800);
+            } else {
+                appendMsg("user", "不用了，謝謝。");
+                appendMsg("bot", "好的，沒問題！若有其他需要隨時找我。");
+            }
+        }
+
+        function appendMsg(role, text) {
+            const flow = document.getElementById('chat-flow');
+            const div = document.createElement("div");
+            div.className = `msg ${role}`;
+            div.innerHTML = `<div class="bubble">${text}</div>`;
+            flow.appendChild(div);
+            flow.scrollTop = flow.scrollHeight;
+        }
+
+        function appendOptions(opts) {
+            const flow = document.getElementById('chat-flow');
+            const group = document.createElement("div");
+            group.className = "opt-group";
+            opts.forEach(o => {
+                const btn = document.createElement("div");
+                btn.className = "opt-btn";
+                btn.innerText = o.t;
+                btn.onclick = o.a;
+                group.appendChild(btn);
+            });
+            flow.appendChild(group);
+            flow.scrollTop = flow.scrollHeight;
         }
     </script>
 </body>
