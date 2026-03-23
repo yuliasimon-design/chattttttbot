@@ -237,7 +237,9 @@
             chatStep = 0;
             const flow = document.getElementById('chat-flow');
             flow.innerHTML = "";
-            appendMsg("bot", "您好！我是您的智慧助手。在開始前，請問該如何稱呼您呢？");
+            setTimeout(() => {
+                appendMsg("bot", "您好！我是您的智慧助手。在開始前，請問該如何稱呼您呢？");
+            }, 300);
         }
 
         function handleChat() {
@@ -247,27 +249,37 @@
 
             appendMsg("user", text);
             input.value = "";
+            processBotResponse(text);
+        }
 
+        function processBotResponse(inputText) {
             setTimeout(() => {
                 if (chatStep === 0) {
-                    userName = text;
+                    userName = inputText;
                     appendMsg("bot", `好的，<span class="h-teal">${userName}</span>！很高興為您服務。`);
+                    
                     setTimeout(() => {
-                        appendMsg("bot", "嗨～我是智能助理，有任何問題都能問我喔！");
-                        chatStep = 1;
-                    }, 800);
-                } else if (chatStep === 1) {
-                    // 模擬舊對話流程
-                    appendMsg("bot", `您好！家用型濾芯建議每 <span class="h-gold">6 個月</span> 更換一次，才能確保過濾重金屬與餘氯的效果喔！💧`);
-                    setTimeout(() => {
-                        appendMsg("bot", `您目前使用的是【極淨系列 A1】嗎？現在「長效濾芯 3 入組」有首購優惠，平均一顆只要 <span class="h-gold">$450</span>，要幫您確認庫存嗎？`);
+                        appendMsg("bot", "嗨～我是智能助理，有任何問題都能點選下方按鈕問我喔！");
                         appendOptions([
-                            { t: "好啊，請幫我確認。", a: () => handleAction("confirm") },
-                            { t: "不用了，謝謝。", a: () => handleAction("cancel") }
+                            { t: "濾芯更換週期", a: () => startFilterFlow() }
                         ]);
-                    }, 1000);
-                    chatStep = 2;
+                    }, 800);
+                    chatStep = 1;
                 }
+            }, 600);
+        }
+
+        function startFilterFlow() {
+            appendMsg("user", "濾芯更換週期");
+            setTimeout(() => {
+                appendMsg("bot", `您好！家用型濾芯建議每 <span class="h-gold">6 個月</span> 更換一次，才能確保過濾效果喔！💧`);
+                setTimeout(() => {
+                    appendMsg("bot", `您目前使用的是【極淨系列 A1】嗎？現在「長效濾芯 3 入組」有首購優惠，平均一顆只要 <span class="h-gold">$450</span>，要幫您確認庫存嗎？`);
+                    appendOptions([
+                        { t: "好啊，請幫我確認。", a: () => handleAction("confirm") },
+                        { t: "不用了，謝謝。", a: () => handleAction("cancel") }
+                    ]);
+                }, 1000);
             }, 600);
         }
 
@@ -275,10 +287,8 @@
             if (type === 'confirm') {
                 appendMsg("user", "好啊，請幫我確認。");
                 setTimeout(() => {
-                    appendMsg("bot", `沒問題，庫存充足！${userName}，建議您現在點擊下方按鈕加入「水質守護會員」，我們會自動為您記錄「安裝日期」，並在效能下降前主動提醒您更換。🎁`);
-                    setTimeout(() => {
-                        appendMsg("bot", "歡迎加入！「水質守護計畫」已啟動。<br><br>系統已設好提醒，我們 6 個月後見！✨");
-                    }, 1200);
+                    appendMsg("bot", `沒問題，庫存充足！${userName}，建議您現在加入<span class="h-purple">「水質守護會員」</span>，這一單立刻現折 <span class="h-gold">$100 元</span> 喔！🎁`);
+                    appendOptions([{ t: "我要加入", a: () => alert("已為您啟動水質守護計畫！") }]);
                 }, 800);
             } else {
                 appendMsg("user", "不用了，謝謝。");
@@ -286,14 +296,13 @@
             }
         }
 
-        // --- 輔助函式 ---
         function appendMsg(role, text) {
             const flow = document.getElementById('chat-flow');
             const div = document.createElement("div");
             div.className = `msg ${role}`;
             div.innerHTML = `<div class="bubble">${text}</div>`;
             flow.appendChild(div);
-            flow.scrollTop = flow.scrollHeight; // 自動滾動到底部
+            flow.scrollTop = flow.scrollHeight;
         }
 
         function appendOptions(opts) {
