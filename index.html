@@ -163,6 +163,61 @@
             background: var(--coral); color: white; border: none; 
             padding: 8px 18px; border-radius: 20px; cursor: pointer; font-weight: bold;
         }
+
+        /* ===== RWD ===== */
+
+        /* 平板：2 欄 */
+        @media (max-width: 1024px) and (min-width: 641px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-auto-rows: auto;
+            }
+            .card.featured {
+                grid-column: span 2;
+                grid-row: span 1;
+                min-height: 200px;
+            }
+            .card { min-height: 130px; }
+        }
+
+        /* 手機：1 欄 */
+        @media (max-width: 640px) {
+            body { padding: 24px 16px; }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 14px;
+                margin-bottom: 30px;
+            }
+            .header-left h1 { font-size: 1.5rem; }
+
+            .bento-grid {
+                grid-template-columns: 1fr;
+                grid-auto-rows: auto;
+                gap: 14px;
+            }
+            .card {
+                min-height: 100px;
+                grid-column: span 1 !important;
+                grid-row: span 1 !important;
+            }
+            .card.featured { min-height: 160px; }
+            .card.featured h3 { font-size: 1.3rem; }
+
+            .detail-box {
+                padding: 24px 18px;
+                border-radius: 14px;
+            }
+
+            .chat-ui {
+                max-width: 100%;
+                height: 420px;
+                border-radius: 12px;
+            }
+
+            .opt-group { padding-left: 8px; }
+        }
     </style>
 </head>
 <body>
@@ -237,9 +292,7 @@
             chatStep = 0;
             const flow = document.getElementById('chat-flow');
             flow.innerHTML = "";
-            setTimeout(() => {
-                appendMsg("bot", "您好！我是您的智慧助手。在開始前，請問該如何稱呼您呢？");
-            }, 300);
+            appendMsg("bot", "您好！我是您的智慧助手。在開始前，請問該如何稱呼您呢？");
         }
 
         function handleChat() {
@@ -249,37 +302,36 @@
 
             appendMsg("user", text);
             input.value = "";
-            processBotResponse(text);
-        }
 
-        function processBotResponse(inputText) {
             setTimeout(() => {
                 if (chatStep === 0) {
-                    userName = inputText;
+                    userName = text;
                     appendMsg("bot", `好的，<span class="h-teal">${userName}</span>！很高興為您服務。`);
-                    
                     setTimeout(() => {
-                        appendMsg("bot", "嗨～我是智能助理，有任何問題都能點選下方按鈕問我喔！");
-                        appendOptions([
-                            { t: "濾芯更換週期", a: () => startFilterFlow() }
-                        ]);
+                        appendMsg("bot", "嗨～我是智能助理，有任何問題都能問我喔！");
+                        chatStep = 1;
                     }, 800);
-                    chatStep = 1;
+                } else if (chatStep === 1) {
+                    // 模擬舊對話流程
+                    appendMsg("bot", `您好！家用型濾芯建議每 <span class="h-gold">6 個月</span> 更換一次，才能確保過濾重金屬與餘氯的效果喔！💧`);
+                    setTimeout(() => {
+                        appendMsg("bot", `您目前使用的是【極淨系列 A1】嗎？現在「長效濾芯 3 入組」有首購優惠，平均一顆只要 <span class="h-gold">$450</span>，要幫您確認庫存嗎？`);
+                        appendOptions([
+                            { t: "好啊，請幫我確認。", a: () => handleAction("confirm") },
+                            { t: "不用了，謝謝。", a: () => handleAction("cancel") }
+                        ]);
+                    }, 1000);
+                    chatStep = 2;
+                } else if (chatStep === 2) {
+                    // 用戶沒點按鈕、直接打字 → 親切引導
+                    appendMsg("bot", `嘿 <span class="h-teal">${userName}</span>，點一下上面的按鈕就可以囉！👆 選「確認」幫你查庫存，或「不用了」也完全沒關係 😊`);
+                    setTimeout(() => {
+                        appendOptions([
+                            { t: "好啊，請幫我確認。", a: () => handleAction("confirm") },
+                            { t: "不用了，謝謝。", a: () => handleAction("cancel") }
+                        ]);
+                    }, 400);
                 }
-            }, 600);
-        }
-
-        function startFilterFlow() {
-            appendMsg("user", "濾芯更換週期");
-            setTimeout(() => {
-                appendMsg("bot", `您好！家用型濾芯建議每 <span class="h-gold">6 個月</span> 更換一次，才能確保過濾效果喔！💧`);
-                setTimeout(() => {
-                    appendMsg("bot", `您目前使用的是【極淨系列 A1】嗎？現在「長效濾芯 3 入組」有首購優惠，平均一顆只要 <span class="h-gold">$450</span>，要幫您確認庫存嗎？`);
-                    appendOptions([
-                        { t: "好啊，請幫我確認。", a: () => handleAction("confirm") },
-                        { t: "不用了，謝謝。", a: () => handleAction("cancel") }
-                    ]);
-                }, 1000);
             }, 600);
         }
 
@@ -287,8 +339,10 @@
             if (type === 'confirm') {
                 appendMsg("user", "好啊，請幫我確認。");
                 setTimeout(() => {
-                    appendMsg("bot", `沒問題，庫存充足！${userName}，建議您現在加入<span class="h-purple">「水質守護會員」</span>，這一單立刻現折 <span class="h-gold">$100 元</span> 喔！🎁`);
-                    appendOptions([{ t: "我要加入", a: () => alert("已為您啟動水質守護計畫！") }]);
+                    appendMsg("bot", `沒問題，庫存充足！${userName}，建議您現在點擊下方按鈕加入「水質守護會員」，我們會自動為您記錄「安裝日期」，並在效能下降前主動提醒您更換。🎁`);
+                    setTimeout(() => {
+                        appendMsg("bot", "歡迎加入！「水質守護計畫」已啟動。<br><br>系統已設好提醒，我們 6 個月後見！✨");
+                    }, 1200);
                 }, 800);
             } else {
                 appendMsg("user", "不用了，謝謝。");
@@ -296,13 +350,14 @@
             }
         }
 
+        // --- 輔助函式 ---
         function appendMsg(role, text) {
             const flow = document.getElementById('chat-flow');
             const div = document.createElement("div");
             div.className = `msg ${role}`;
             div.innerHTML = `<div class="bubble">${text}</div>`;
             flow.appendChild(div);
-            flow.scrollTop = flow.scrollHeight;
+            flow.scrollTop = flow.scrollHeight; // 自動滾動到底部
         }
 
         function appendOptions(opts) {
