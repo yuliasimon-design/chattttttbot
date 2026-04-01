@@ -308,20 +308,16 @@
                     userName = text;
                     appendMsg("bot", `好的，<span class="h-teal">${userName}</span>！很高興為您服務。`);
                     setTimeout(() => {
-                        appendMsg("bot", "嗨～我是智能助理，有任何問題都能問我喔！");
-                        chatStep = 1;
+                        appendMsg("bot", `家用型濾芯建議每 <span class="h-gold">6 個月</span> 更換一次，才能確保過濾重金屬與餘氯的效果喔！💧`);
+                        setTimeout(() => {
+                            appendMsg("bot", `您目前使用的是【極淨系列 A1】嗎？現在「長效濾芯 3 入組」有首購優惠，平均一顆只要 <span class="h-gold">$450</span>，要幫您確認庫存嗎？`);
+                            appendOptions([
+                                { t: "好啊，請幫我確認。", a: () => handleAction("confirm") },
+                                { t: "不用了，謝謝。", a: () => handleAction("cancel") }
+                            ]);
+                            chatStep = 2;
+                        }, 1000);
                     }, 800);
-                } else if (chatStep === 1) {
-                    // 模擬舊對話流程
-                    appendMsg("bot", `您好！家用型濾芯建議每 <span class="h-gold">6 個月</span> 更換一次，才能確保過濾重金屬與餘氯的效果喔！💧`);
-                    setTimeout(() => {
-                        appendMsg("bot", `您目前使用的是【極淨系列 A1】嗎？現在「長效濾芯 3 入組」有首購優惠，平均一顆只要 <span class="h-gold">$450</span>，要幫您確認庫存嗎？`);
-                        appendOptions([
-                            { t: "好啊，請幫我確認。", a: () => handleAction("confirm") },
-                            { t: "不用了，謝謝。", a: () => handleAction("cancel") }
-                        ]);
-                    }, 1000);
-                    chatStep = 2;
                 } else if (chatStep === 2) {
                     // 用戶沒點按鈕、直接打字 → 親切引導
                     appendMsg("bot", `嘿 <span class="h-teal">${userName}</span>，點一下上面的按鈕就可以囉！👆 選「確認」幫你查庫存，或「不用了」也完全沒關係 😊`);
